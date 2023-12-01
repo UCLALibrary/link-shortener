@@ -21,27 +21,40 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-qphye7+yrd2l3l(8xx6d@a@@avppj&0mvav&av$xcbbv!y1d0$"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG")
+# Helm charts pass "false" instead of Python False, and
+# Python "false" is True...
+if DEBUG in ["false", "False"]:
+    DEBUG = False
 
-ALLOWED_HOSTS = []
+# Define the list of allowed hosts to connect to this application
+# This is passed in via the environment variable DJANGO_ALLOWED_HOSTS
+# which is a string - but ALLOWED_HOSTS requires a list
+ALLOWED_HOSTS = list(os.getenv("DJANGO_ALLOWED_HOSTS").split(","))
 
+# Django 4 may require this, at least in our deployment environment.
+CSRF_TRUSTED_ORIGINS = list(os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS").split(","))
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Enable whitenoise in development per http://whitenoise.evans.io/en/stable/django.html
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "shortlinks",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -55,7 +68,7 @@ ROOT_URLCONF = "project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -70,17 +83,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "project.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.getenv("DJANGO_DB_BACKEND"),
+        "NAME": os.getenv("DJANGO_DB_NAME"),
+        "USER": os.getenv("DJANGO_DB_USER"),
+        "PASSWORD": os.getenv("DJANGO_DB_PASSWORD"),
+        "HOST": os.getenv("DJANGO_DB_HOST"),
+        "PORT": os.getenv("DJANGO_DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -105,18 +119,37 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
+TIME_ZONE = "America/Los_Angeles"
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+# Django will add this URL, and serve static files from here
+STATIC_URL = "/static/"
+# Where on the file system should Django find our custom static files?
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# Where will all static files - our custom + Django's?
+# This matters only when not using runserver, and using collectstaticfiles.
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATIC_URL = "static/"
+# There is a timing issue with Whitenoise that is described here:
+# https://github.com/evansd/whitenoise/issues/215
+# The work around suggested is to check for the existence of the
+# static root directory, and if doesn't exist yet then create it
+if not os.path.isdir(STATIC_ROOT):
+    os.makedirs(STATIC_ROOT, mode=0o755)
+
+# Improved caching with whitenoise when running in production.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
