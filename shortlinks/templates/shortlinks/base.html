@@ -1,0 +1,33 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <!-- Custom JS -->
+    <!-- <script src="{% static 'js/main.js' %}" defer></script> -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"/>
+</head>
+
+<body>
+    <ul class="navbar">
+        <li><a href="/add_link/">Add Link</a></li>
+        <li><a href="/show_links/">Show Links</a></li>
+        <li><a href="/logs/">Logs</a></li>
+        <li><a href="/release_notes/">Release Notes</a></li>
+        <li><a href="/admin/logout/">Logout</a></li>
+    </ul>
+    <br>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+
+</html>

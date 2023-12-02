@@ -1,0 +1,28 @@
+{% extends 'shortlinks/base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+{% if messages %}
+<div class="box">
+{% for message in messages %}
+  <div>{{ message }}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if links %}
+<table class="search-results">
+{% for link in links %}
+<tr>
+    <td>{{ link.short_path }}</td>
+    <td><a href="{{ link.target_url }}">{{ link.target_url }}</a>
+    <td>{{ link.create_date }}</td>
+    <td>{{ link.created_by }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
