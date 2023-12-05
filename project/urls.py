@@ -19,10 +19,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-]
-
-urlpatterns = [
-    path("", include("shortlinks.urls")),
-    path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
+    # This application's links must be last due to how redirects are handled.
+    path("", include("shortlinks.urls")),
 ]

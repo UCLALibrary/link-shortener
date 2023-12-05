@@ -38,8 +38,11 @@ ALLOWED_HOSTS = list(os.getenv("DJANGO_ALLOWED_HOSTS").split(","))
 # Django 4 may require this, at least in our deployment environment.
 CSRF_TRUSTED_ORIGINS = list(os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS").split(","))
 
-# Application definition
+# Environment-specific prefix for short links, so we don't have to build this in code.
+# e.g., http://127.0.0.1:8000 or https://go.library.ucla.edu
+LINK_PREFIX = os.getenv("DJANGO_LINK_PREFIX")
 
+# Application definition
 INSTALLED_APPS = [
     # Enable whitenoise in development per http://whitenoise.evans.io/en/stable/django.html
     "whitenoise.runserver_nostatic",
@@ -156,6 +159,8 @@ STORAGES = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGOUT_REDIRECT_URL = "/"
 
 # Logging
 LOGGING = {

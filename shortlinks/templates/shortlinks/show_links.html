@@ -14,14 +14,20 @@
 
 {% if links %}
 <table class="search-results">
-{% for link in links %}
-<tr>
-    <td>{{ link.short_path }}</td>
-    <td><a href="{{ link.target_url }}">{{ link.target_url }}</a>
-    <td>{{ link.create_date }}</td>
-    <td>{{ link.created_by }}</td>
-</tr>
-{% endfor %}
+  <thead>
+    <th>Short Link</th>
+    <th>Target URL</th>
+    <th>Created On</th>
+    <th>Created By</th>
+  </thead>
+  {% for link in links %}
+  <tr>
+      <td>{{ link.short_link|urlize }}</td>
+      <td>{{ link.target_url|urlize }}</td>
+      <td>{{ link.create_date }}</td>
+      <td>{{ link.created_by }}</td>
+  </tr>
+  {% endfor %}
 </table>
 {% endif %}
 

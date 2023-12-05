@@ -2,8 +2,10 @@ from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
+    path("", views.add_link, name="add_link"),
     path("add_link/", views.add_link, name="add_link"),
-    path("show_links/", views.show_links, name="show_links"),
+    path("my_links/", views.my_links, name="my_links"),
+    path("all_links/", views.all_links, name="all_links"),
     path("logs/", views.show_log, name="show_log"),
     path("logs/<int:line_count>", views.show_log, name="show_log"),
     path("release_notes/", views.release_notes, name="release_notes"),
