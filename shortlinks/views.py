@@ -2,7 +2,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet  # for type hints
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from shortlinks.forms import LinkForm
 from shortlinks.models import Link
@@ -61,16 +61,13 @@ def my_links(request: HttpRequest) -> HttpResponse:
     return display_links(request, links)
 
 
-def redirect_link(request: HttpRequest) -> HttpResponse:
-    """Get target URL matching short link (if any).
-    # Raise HTTP 404 if not found.
-    """
-    short_path = format_short_path(request.path)
-
-    # TODO: Friendly 404 page here, or just let target site handle 404s?
-    link = get_object_or_404(Link, short_path=short_path)
-    # If we get here, the link was found.
-    return redirect(link.target_url)
+@login_required
+def delete_link(request: HttpRequest, link_id: int) -> HttpResponse:
+    """Delete the link with the given link_id."""
+    link = get_object_or_404(Link, pk=link_id)
+    link.delete()
+    # Go back to the calling page
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 @login_required
@@ -93,3 +90,16 @@ def show_log(request, line_count: int = 200) -> HttpResponse:
 def release_notes(request: HttpRequest) -> HttpResponse:
     """Display release notes."""
     return render(request, "shortlinks/release_notes.html")
+
+
+# This view does not require login, as it handles anonymous redirects.
+def redirect_link(request: HttpRequest) -> HttpResponse:
+    """Get target URL matching short link (if any).
+    # Raise HTTP 404 if not found.
+    """
+    short_path = format_short_path(request.path)
+
+    # TODO: Friendly 404 page here, or just let target site handle 404s?
+    link = get_object_or_404(Link, short_path=short_path)
+    # If we get here, the link was found.
+    return redirect(link.target_url)

@@ -19,6 +19,7 @@
     <th>Target URL</th>
     <th>Created On</th>
     <th>Created By</th>
+    <th>Delete</th>
   </thead>
   {% for link in links %}
   <tr>
@@ -26,6 +27,7 @@
       <td>{{ link.target_url|urlize }}</td>
       <td>{{ link.create_date }}</td>
       <td>{{ link.created_by }}</td>
+      <td><a onclick="return confirmDelete();" href="{% url 'delete_link' link.id %}">Delete</a></td>
   </tr>
   {% endfor %}
 </table>

@@ -9,7 +9,7 @@ class LinkForm(forms.ModelForm):
         labels = {"target_url": "Target URL"}
         widgets = {
             "short_path": forms.TextInput(attrs={"placeholder": "e.g., /lib"}),
-            "target_url": forms.TextInput(
+            "target_url": forms.URLInput(
                 attrs={"placeholder": "e.g., https://www.library.ucla.edu"}
             ),
         }
