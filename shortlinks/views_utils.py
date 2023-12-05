@@ -25,6 +25,8 @@ def get_links(owner: AbstractBaseUser = None) -> QuerySet:
     else:
         links = Link.objects.all()
 
+    # Add a "short_link" field: link_prefix+short_path
+    # so the template doesn't have to assemble this.
     links = links.annotate(
         short_link=Concat(Value(link_prefix), "short_path", output_field=CharField())
     ).order_by("-create_date")
