@@ -1,0 +1,36 @@
+{% extends 'shortlinks/base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+{% if messages %}
+<div class="box">
+{% for message in messages %}
+  <div>{{ message }}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if links %}
+<table class="search-results">
+  <thead>
+    <th>Short Link</th>
+    <th>Target URL</th>
+    <th>Created On</th>
+    <th>Created By</th>
+    <th>Delete</th>
+  </thead>
+  {% for link in links %}
+  <tr>
+      <td>{{ link.short_link|urlize }}</td>
+      <td>{{ link.target_url|urlize }}</td>
+      <td>{{ link.create_date }}</td>
+      <td>{{ link.created_by }}</td>
+      <td><a onclick="return confirmDelete();" href="{% url 'delete_link' link.id %}">Delete</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}

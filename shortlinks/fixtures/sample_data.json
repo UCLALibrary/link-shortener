@@ -1,0 +1,48 @@
+[
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "username": "user1",
+        "email": "user1@testing.library.ucla.edu"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "username": "user2",
+        "email": "user2@testing.library.ucla.edu"
+    }
+},
+{
+    "model": "shortlinks.link",
+    "pk": 1,
+    "fields": {
+        "short_path": "/use",
+        "target_url": "https://www.library.ucla.edu/help/using-the-library",
+        "create_date": "2023-12-02T01:00:37.820Z",
+        "created_by": 2
+    }
+},
+{
+    "model": "shortlinks.link",
+    "pk": 2,
+    "fields": {
+        "short_path": "/lib",
+        "target_url": "https://www.library.ucla.edu/",
+        "create_date": "2023-12-02T01:19:05.674Z",
+        "created_by": 2
+    }
+},
+{
+    "model": "shortlinks.link",
+    "pk": 3,
+    "fields": {
+        "short_path": "/public",
+        "target_url": "https://www.library.ucla.edu/help/services-for-the-general-public",
+        "create_date": "2023-12-02T01:19:05.674Z",
+        "created_by": 3
+    }
+}
+]

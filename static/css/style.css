@@ -1,0 +1,33 @@
+ul.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #d0d0d7;
+    border: 1px solid black;
+    justify-content: unset;
+}
+
+.navbar li {
+    float: left;
+    border-right: 1px solid #bcbcc5;
+}
+
+.navbar li a {
+    display: block;
+    text-align: center;
+    padding: 10px 12px;
+    text-decoration: none;
+}
+
+.box {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.search-results th, .search-results td {
+    padding: 4px;
+    border: 1px solid;
+    vertical-align: top;
+}

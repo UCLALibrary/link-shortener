@@ -1,0 +1,21 @@
+{% extends 'shortlinks/base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+{% if messages %}
+<div class="box">
+{% for message in messages %}
+  <div>{{ message }}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<form name="add_link" id="add_link" method="POST">
+    {% csrf_token %}
+    {% bootstrap_field form.short_path layout="horizontal" placeholder="" %}
+    {% bootstrap_field form.target_url layout="horizontal" placeholder="" %}
+    {% bootstrap_button button_type="submit" content="Add Link" %}
+</form>
+{% endblock %}
