@@ -1,6 +1,8 @@
 name: Build and Test Link Shortener
 on: 
   pull_request:
+    paths-ignore:
+      - 'charts/**'
   workflow_dispatch:
 jobs:
   build_and_test:
