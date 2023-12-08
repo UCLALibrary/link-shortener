@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: uclalibrary/link-shortener
-  tag: v1.0.0
+  tag: v1.0.1
   pullPolicy: Always
 
 nameOverride: ""
