@@ -1,6 +1,16 @@
-<h2>Log In</h2>
+{% extends 'shortlinks/base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+<h3>Log In</h2>
+<br/>
+
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log In</button>
+    {% bootstrap_form form layout="horizontal" %}
+    {% bootstrap_button button_type="submit" content="Log In" %}
 </form>
+
+{% endblock %}
