@@ -15,3 +15,8 @@ class Link(models.Model):
         # No backwards relation to User model
         related_name="+",
     )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["short_path"]),
+        ]

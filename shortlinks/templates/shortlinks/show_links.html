@@ -13,6 +13,7 @@
 {% endif %}
 
 {% if links %}
+<p>Showing {{ links|length }} links:</p>
 <table class="search-results">
   <thead>
     <th>Short Link</th>
@@ -31,6 +32,8 @@
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<p>There are no links to show.</p>
 {% endif %}
 
 {% endblock %}
