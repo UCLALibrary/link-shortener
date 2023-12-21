@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase
-from shortlinks.views_utils import format_short_path, get_links
+from shortlinks.models import Link
+from shortlinks.views_utils import format_short_path, get_links, get_short_link
 
 
 class LinkTest(TestCase):
@@ -35,3 +36,23 @@ class LinkTest(TestCase):
         link = get_links()[0]
         expected_short_link = settings.LINK_PREFIX + link.short_path
         self.assertEqual(expected_short_link, link.short_link)
+
+
+class RedirectTest(TestCase):
+    fixtures = ["sample_data.json"]
+
+    def test_redirect_is_followed(self):
+        # Confirm Django redirects to the target URL.
+        link = Link.objects.get(short_path="/lib")
+        short_link = get_short_link(link.short_path)
+        response = self.client.get(short_link)
+        self.assertRedirects(
+            response, link.target_url, status_code=302, fetch_redirect_response=False
+        )
+
+    def test_referer_is_added(self):
+        # Confirm our referer field is added to the response headers.
+        link = Link.objects.get(short_path="/lib")
+        short_link = get_short_link(link.short_path)
+        response = self.client.get(short_link)
+        self.assertEqual(response.headers["Referer"], short_link)

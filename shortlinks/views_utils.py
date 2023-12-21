@@ -31,3 +31,11 @@ def get_links(owner: AbstractBaseUser = None) -> QuerySet:
         short_link=Concat(Value(link_prefix), "short_path", output_field=CharField())
     ).order_by("-create_date")
     return links
+
+
+def get_short_link(short_path: str) -> str:
+    """Return a short_link: an absolute URL using the short_path.
+    This duplicates the simple concatenation logic in get_links(),
+    but uses different access logic and does not hit the database.
+    """
+    return settings.LINK_PREFIX + short_path
