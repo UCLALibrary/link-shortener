@@ -3,10 +3,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet  # for type hints
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from shortlinks.forms import LinkForm
 from shortlinks.models import Link
-from shortlinks.views_utils import format_short_path, get_links
+from shortlinks.views_utils import format_short_path, get_links, get_short_link
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +99,13 @@ def redirect_link(request: HttpRequest) -> HttpResponse:
     """
     short_path = format_short_path(request.path)
 
-    # TODO: Friendly 404 page here, or just let target site handle 404s?
+    # Let target site handle 404s, since web editors manage these links.
     link = get_object_or_404(Link, short_path=short_path)
+
     # If we get here, the link was found.
-    return redirect(link.target_url)
+    response = HttpResponseRedirect(link.target_url)
+
+    # Add a referer (sic) HTTP header with the full URL of the short link.
+    requested_short_url = get_short_link(request.path)
+    response.headers["Referer"] = requested_short_url
+    return response
