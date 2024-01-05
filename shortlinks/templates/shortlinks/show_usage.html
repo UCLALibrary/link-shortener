@@ -1,0 +1,37 @@
+{% extends 'shortlinks/base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+{% if messages %}
+<div class="box">
+{% for message in messages %}
+  <div>{{ message }}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if usage_stats %}
+<p>Showing {{ usage_stats|length }} usage statistics for {{ short_link|urlize }}:</p>
+<table class="search-results">
+  <thead>
+    <th>Usage Date</th>
+    <th>Referrer</th>
+    <th>Query String</th>
+    <th>User Agent</th>
+  </thead>
+  {% for stat in usage_stats %}
+  <tr>
+      <td>{{ stat.usage_date }}</td>
+      <td>{{ stat.referrer|urlize }}</td>
+      <td>{{ stat.query_string }}</td>
+      <td>{{ stat.user_agent }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>There are no usage statistics to show.</p>
+{% endif %}
+
+{% endblock %}

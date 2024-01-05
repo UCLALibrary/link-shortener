@@ -5,8 +5,13 @@ from django.db.models import QuerySet  # for type hints
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from shortlinks.forms import LinkForm
-from shortlinks.models import Link
-from shortlinks.views_utils import format_short_path, get_links, get_short_link
+from shortlinks.models import Link, UsageStat
+from shortlinks.views_utils import (
+    capture_usage_stats,
+    format_short_path,
+    get_links,
+    get_short_link,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +76,19 @@ def delete_link(request: HttpRequest, link_id: int) -> HttpResponse:
 
 
 @login_required
+def show_usage(request: HttpRequest, link_id: int) -> HttpResponse:
+    """Show usage info for the given link_id."""
+    usage_stats = UsageStat.objects.filter(link_id=link_id).order_by("-usage_date")
+    link = get_object_or_404(Link, pk=link_id)
+    short_link = get_short_link(link.short_path)
+    return render(
+        request,
+        "shortlinks/show_usage.html",
+        {"usage_stats": usage_stats, "short_link": short_link},
+    )
+
+
+@login_required
 def show_log(request, line_count: int = 200) -> HttpResponse:
     """Display log."""
     log_file = "logs/application.log"
@@ -97,7 +115,11 @@ def redirect_link(request: HttpRequest) -> HttpResponse:
     """Get target URL matching short link (if any).
     # Raise HTTP 404 if not found.
     """
-    short_path = format_short_path(request.path)
+    requested_path = request.META.get("PATH_INFO", "")
+    query_string = request.META.get("QUERY_STRING", "")
+    if query_string != "":
+        requested_path = f"{requested_path}?{query_string}"
+    short_path = format_short_path(requested_path)
 
     # Let target site handle 404s, since web editors manage these links.
     link = get_object_or_404(Link, short_path=short_path)
@@ -105,7 +127,10 @@ def redirect_link(request: HttpRequest) -> HttpResponse:
     # If we get here, the link was found.
     response = HttpResponseRedirect(link.target_url)
 
+    # Capture usage statistics
+    capture_usage_stats(link, request)
+
     # Add a referer (sic) HTTP header with the full URL of the short link.
-    requested_short_url = get_short_link(request.path)
+    requested_short_url = get_short_link(short_path)
     response.headers["Referer"] = requested_short_url
     return response

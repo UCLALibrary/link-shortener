@@ -1,8 +1,12 @@
+import logging
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser  # for type hints
 from django.db.models import CharField, QuerySet, Value
 from django.db.models.functions import Concat
-from shortlinks.models import Link
+from django.http import HttpRequest
+from shortlinks.models import Link, UsageStat
+
+logger = logging.getLogger(__name__)
 
 
 def format_short_path(short_path: str) -> str:
@@ -39,3 +43,14 @@ def get_short_link(short_path: str) -> str:
     but uses different access logic and does not hit the database.
     """
     return settings.LINK_PREFIX + short_path
+
+
+def capture_usage_stats(link: Link, request: HttpRequest) -> None:
+    """Capture selected request info for a link."""
+    UsageStat.objects.create(
+        link=link,
+        client_ip=request.META.get("REMOTE_ADDR", ""),
+        query_string=request.META.get("QUERY_STRING", ""),
+        referrer=request.META.get("HTTP_REFERER", ""),
+        user_agent=request.META.get("HTTP_USER_AGENT", ""),
+    )

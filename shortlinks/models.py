@@ -20,3 +20,12 @@ class Link(models.Model):
         indexes = [
             models.Index(fields=["short_path"]),
         ]
+
+
+class UsageStat(models.Model):
+    link = models.ForeignKey(Link, on_delete=models.CASCADE, blank=False, null=False)
+    client_ip = models.GenericIPAddressField(null=False)
+    query_string = models.CharField(blank=True, null=False)
+    referrer = models.CharField(blank=True, null=False)
+    user_agent = models.CharField(blank=True, null=False)
+    usage_date = models.DateTimeField(blank=False, null=False, default=timezone.now)
