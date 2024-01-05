@@ -79,7 +79,13 @@ def delete_link(request: HttpRequest, link_id: int) -> HttpResponse:
 def show_usage(request: HttpRequest, link_id: int) -> HttpResponse:
     """Show usage info for the given link_id."""
     usage_stats = UsageStat.objects.filter(link_id=link_id).order_by("-usage_date")
-    return render(request, "shortlinks/show_usage.html", {"usage_stats": usage_stats})
+    link = get_object_or_404(Link, pk=link_id)
+    short_link = get_short_link(link.short_path)
+    return render(
+        request,
+        "shortlinks/show_usage.html",
+        {"usage_stats": usage_stats, "short_link": short_link},
+    )
 
 
 @login_required
