@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase
-from shortlinks.models import Link
+from shortlinks.models import Link, UsageStat
 from shortlinks.views_utils import format_short_path, get_links, get_short_link
 
 
@@ -56,3 +56,33 @@ class RedirectTest(TestCase):
         short_link = get_short_link(link.short_path)
         response = self.client.get(short_link)
         self.assertEqual(response.headers["Referer"], short_link)
+
+
+class UsageStatTest(TestCase):
+    fixtures = ["sample_data.json"]
+
+    def test_usage_is_captured(self):
+        link = Link.objects.get(short_path="/use")
+        short_link = get_short_link(link.short_path)
+        # No need to capture client's response for this test.
+        self.client.get(short_link)
+        stat = UsageStat.objects.last()
+        self.assertEqual(stat.link, link)
+
+    def test_referrer_is_captured(self):
+        link = Link.objects.get(short_path="/use")
+        short_link = get_short_link(link.short_path)
+        # No need to capture client's response for this test.
+        # Add Referer (sic) header to request.
+        self.client.get(short_link, headers={"Referer": short_link})
+        stat = UsageStat.objects.last()
+        self.assertEqual(stat.referrer, short_link)
+
+    def test_query_string_is_captured(self):
+        link = Link.objects.get(short_path="/public?campaign=linklister&tracking=evil")
+        short_link = get_short_link(link.short_path)
+        # No need to capture client's response for this test.
+        self.client.get(short_link)
+        stat = UsageStat.objects.last()
+        # Query string itself does not start with "?".
+        self.assertEqual(stat.query_string, "campaign=linklister&tracking=evil")

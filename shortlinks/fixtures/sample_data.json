@@ -39,7 +39,7 @@
     "model": "shortlinks.link",
     "pk": 3,
     "fields": {
-        "short_path": "/public",
+        "short_path": "/public?campaign=linklister&tracking=evil",
         "target_url": "https://www.library.ucla.edu/help/services-for-the-general-public",
         "create_date": "2023-12-02T01:19:05.674Z",
         "created_by": 3
