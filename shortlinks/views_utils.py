@@ -51,6 +51,6 @@ def capture_usage_stats(link: Link, request: HttpRequest) -> None:
         link=link,
         client_ip=request.META.get("REMOTE_ADDR", ""),
         query_string=request.META.get("QUERY_STRING", ""),
-        referrer=request.META.get("HTTP_REFERER", ""),
-        user_agent=request.META.get("HTTP_USER_AGENT", ""),
+        referrer=request.headers.get("referer", ""),
+        user_agent=request.headers.get("user-agent", ""),
     )

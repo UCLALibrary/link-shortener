@@ -72,7 +72,7 @@ def delete_link(request: HttpRequest, link_id: int) -> HttpResponse:
     link = get_object_or_404(Link, pk=link_id)
     link.delete()
     # Go back to the calling page
-    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    return HttpResponseRedirect(request.headers.get("referer"))
 
 
 @login_required
