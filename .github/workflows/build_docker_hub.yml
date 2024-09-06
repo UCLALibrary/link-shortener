@@ -35,4 +35,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: uclalibrary/link-shortener:${{ steps.yaml-data.outputs.data }}
+          tags: |
+            uclalibrary/link-shortener:${{ steps.yaml-data.outputs.data }}
+            uclalibrary/link-shortener:scan
