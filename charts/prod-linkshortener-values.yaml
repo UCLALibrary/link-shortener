@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: uclalibrary/link-shortener
-  tag: v1.0.8
+  tag: v1.0.9
   pullPolicy: Always
 
 nameOverride: ""
@@ -45,7 +45,7 @@ django:
       - https://go.library.ucla.edu
     link_prefix: "https://go.library.ucla.edu"
     log_level: "INFO"
-    db_backend: "django.db.backends.postgresql_psycopg2"
+    db_backend: "django.db.backends.postgresql"
     db_name: "link_shortener"
     db_user: "link_shortener"
     db_host: "p-d-postgres.library.ucla.edu"

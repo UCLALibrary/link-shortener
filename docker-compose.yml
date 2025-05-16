@@ -2,20 +2,20 @@ services:
   django:
     build: .
     # tty: true
-    volumes: 
+    volumes:
       - .:/home/django/link-shortener
     env_file:
       - .docker-compose_django.env
       - .docker-compose_db.env
       # Local development only
       # - .docker-compose_secrets.env
-    ports: 
+    ports:
       # Variables here must be set in environment, or in .env - not in any env_file
       - "8000:8000"
     depends_on:
       - db
   db:
-    image: postgres:12
+    image: postgres:16
     env_file:
       - .docker-compose_db.env
     volumes:
