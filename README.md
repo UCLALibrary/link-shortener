@@ -21,7 +21,7 @@ The development database is a Docker container running PostgreSQL 16, which matc
 
 #### Django container
 
-This uses Django 5.2, in a Debian 11 (Bullseye) container running Python 3.13.  All code 
+This uses Django 5.2, in a Debian 12 (Bookworm) container running Python 3.13.  All code 
 runs in the container, so local version of Python does not matter.
 
 The container runs via `docker_scripts/entrypoint.sh`, which
