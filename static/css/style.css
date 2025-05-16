@@ -20,13 +20,18 @@ ul.navbar {
     text-decoration: none;
 }
 
+.navbar li form {
+    display: inline;
+}
+
 .box {
     margin: 10px;
     padding: 10px;
     border: 1px solid black;
 }
 
-.search-results th, .search-results td {
+.search-results th,
+.search-results td {
     padding: 4px;
     border: 1px solid;
     vertical-align: top;

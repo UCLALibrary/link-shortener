@@ -8,11 +8,11 @@
 <head>
     <title>UCLA Library Link Shortener</title>
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
     <!-- Custom JS -->
     <script src="{% static 'js/main.js' %}" defer></script>
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"/>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
 </head>
 
 <body>
@@ -22,7 +22,12 @@
         <li><a href="/all_links/">All Links</a></li>
         <li><a href="/logs/">Logs</a></li>
         <li><a href="/release_notes/">Release Notes</a></li>
-        <li><a href="/accounts/logout/">Logout</a></li>
+        <li>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                {% bootstrap_button "Logout" button_type="submit" button_class="link-primary" %}
+            </form>
+        </li>
     </ul>
     <br>
     <div class="container">
