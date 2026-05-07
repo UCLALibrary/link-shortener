@@ -140,4 +140,4 @@ Our deployment system is triggered by changes to the Helm chart.  Typically, thi
 * Backward compatible functionality changes: update minor level (e.g., `v1.0.1` to `v1.1.0`)
 * Breaking changes: update major level (e.g., `v1.0.1` to `v2.0.0`)
 
-In addition to updating version in the Helm chart, update the Release Notes in `release_notes.html`.  Put the latest changes first, following the established format.
+In addition to updating version in the Helm chart, update the Release Notes in `shortlinks/templates/shortlinks/release_notes.html`.  Put the latest changes first, following the established format.
