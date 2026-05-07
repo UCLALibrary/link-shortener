@@ -1,5 +1,5 @@
-Django==5.2.10
+Django==5.2.13
 gunicorn==23.0.0
 psycopg==3.2.9
 whitenoise==6.5.0
-django-bootstrap5 == 23.3
+django-bootstrap5==23.3
